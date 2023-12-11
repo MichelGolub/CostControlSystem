@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosInstance } from 'helpers'
 
-
 const name = 'planForCategory'
 const initialState = createInitialState()
 const extraActions = createExtraActions()
@@ -15,7 +14,6 @@ export const planForCategoryReducer = slice.reducer
 function createInitialState() {
     return {
         planForCategory: {},
-        isLoading: false,
         error: null
     }
 }
@@ -79,63 +77,51 @@ function createExtraActions() {
 }
 
 function createExtraReducers() {
-    return {
-        ...create(),
-        ...update(),
-        ...deleteById()
-    }
+    return (builder) => {
+        create(),
+        update(),
+        deleteById()
 
-    function create() {
-        var { pending, fulfilled, rejected } = extraActions.create
-        return {
-            [pending]: (state) => {
-                state.error = null
-                state.isLoading = true
-            },
-            [fulfilled]: (state) => {
-                state.isLoading = false
-                return state
-            },
-            [rejected]: (state, action) => {
-                state.isLoading = false
-                state.error = action.error
-            }
+        function create() {
+            const { pending, fulfilled, rejected } = extraActions.create
+            builder
+                .addCase(pending, (state) => {
+                    state.error = null
+                })
+                .addCase(fulfilled, (state) => {
+                    return state
+                })
+                .addCase(rejected, (state, action) => {
+                    state.error = action.error
+                })
         }
-    }
-
-    function update() {
-        var { pending, fulfilled, rejected } = extraActions.update
-        return {
-            [pending]: (state) => {
-                state.error = null
-                state.isLoading = true
-            },
-            [fulfilled]: (state) => {
-                state.isLoading = false
-                return state
-            },
-            [rejected]: (state, action) => {
-                state.isLoading = true
-                state.error = action.error
-            }
+    
+        function update() {
+            const { pending, fulfilled, rejected } = extraActions.update
+            builder
+                .addCase(pending, (state) => {
+                    state.error = null
+                })
+                .addCase(fulfilled, (state) => {
+                    return state
+                })
+                .addCase(rejected, (state, action) => {
+                    state.error = action.error
+                })
         }
-    }
-
-    function deleteById() {
-        var { pending, fulfilled, rejected } = extraActions.deleteById
-        return {
-            [pending]: (state) => {
-                state.error = null
-                state.isLoading = true
-            },
-            [fulfilled]: (state) => {
-                state.isLoading = false
-                return state
-            },
-            [rejected]: (state, action) => {
-                state.isLoading = false
-                state.error = action.error
-            }
+    
+        function deleteById() {
+            const { pending, fulfilled, rejected } = extraActions.deleteById
+            builder
+                .addCase(pending, (state) => {
+                    state.error = null
+                })
+                .addCase(fulfilled, (state) => {
+                    return state
+                })
+                .addCase(rejected, (state, action) => {
+                    state.error = action.error
+                })
         }
     }
 }

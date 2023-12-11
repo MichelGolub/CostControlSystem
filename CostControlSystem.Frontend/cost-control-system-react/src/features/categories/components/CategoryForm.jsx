@@ -5,9 +5,8 @@ import { useForm } from 'react-hook-form'
 import { object, shape, string } from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import { FormButtonConfirm } from 'components/FormButtonConfirm'
-
 import Form from 'react-bootstrap/Form'
+import { ButtonWithSpinner } from 'components'
 
 export { CategoryForm }
 
@@ -54,7 +53,12 @@ function CategoryForm({ category, onSubmit, onSubmitted = () => {} }) {
                 </div>
             </Form.Group>
 
-            <FormButtonConfirm text='Submit' isSubmitting={isSubmitting} />
+            <ButtonWithSpinner
+                isLoading={isSubmitting} 
+                type='submit'
+                variant='primary'
+                text='Confirm'
+            />
         </Form>
     )
 }

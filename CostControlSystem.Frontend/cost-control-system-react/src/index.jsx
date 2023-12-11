@@ -8,6 +8,7 @@ import { injectStore } from 'helpers/axios'
 import { App } from './App.jsx'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'assets/App.css'
 
 injectStore(store)
 const container = document.getElementById('root')

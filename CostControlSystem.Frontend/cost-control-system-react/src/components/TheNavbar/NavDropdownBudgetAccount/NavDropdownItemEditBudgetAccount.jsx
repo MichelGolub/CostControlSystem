@@ -2,32 +2,35 @@ import { useState } from 'react'
 
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Modal from 'react-bootstrap/Modal'
-import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
 
 import { BudgetForm } from 'features/budgets'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { budgetsActions } from 'store'
 
-export { NavDropdownItemCreateBudgetAccount }
+export { NavDropdownItemEditBudgetAccount }
 
-function NavDropdownItemCreateBudgetAccount() {
+function NavDropdownItemEditBudgetAccount() {
     const [showModal, setShowModal] = useState(false)
+
+    const { currentBudget } = useSelector(x => x.budgets)
 
     const dispatch = useDispatch()
 
     const onSubmit = (payload) => {
-        return dispatch(budgetsActions.create(payload))
+        return dispatch(budgetsActions.update(payload))
     }
 
     return (
         <>
         <NavDropdown.Item
             onClick={() => setShowModal(true)}
-            className='text-primary'
+            className='text-success'
+            disabled={!currentBudget}
         >
-            <AddIcon />
+            <EditIcon />
             &nbsp;
-            {'New'}
+            {'Edit'}
         </NavDropdown.Item>
         
         <Modal 
@@ -36,10 +39,11 @@ function NavDropdownItemCreateBudgetAccount() {
             animation={false}
         >
             <Modal.Header closeButton>
-                <Modal.Title>{'Create budget account'}</Modal.Title>
+                <Modal.Title>{'Edit budget account'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <BudgetForm
+                    budget={currentBudget}
                     onSubmit={onSubmit}
                     onSubmitted={() => setShowModal(false)}
                 />

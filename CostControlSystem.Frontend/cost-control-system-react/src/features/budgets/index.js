@@ -1,2 +1,2 @@
 export * from './components/BudgetForm'
-export * from './components/ButtonCreateBudget'
+export * from './components/BudgetsTable'

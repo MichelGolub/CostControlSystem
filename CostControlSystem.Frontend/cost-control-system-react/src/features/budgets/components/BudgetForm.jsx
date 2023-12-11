@@ -5,9 +5,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 // eslint-disable-next-line no-unused-vars
 import { object, shape, string, max, required } from 'yup'
 
-import { FormButtonConfirm } from 'components/FormButtonConfirm'
-
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import { ButtonWithSpinner } from 'components'
 
 export { BudgetForm }
 
@@ -40,7 +40,7 @@ function BudgetForm({ budget, onSubmit, onSubmitted = () => {} }) {
             />
 
             <Form.Group>
-                <Form.Label>{'Budget name'}</Form.Label>
+                <Form.Label>{'Budget account name'}</Form.Label>
                 <Form.Control                         
                     {...register('name')}
                     type='text'
@@ -51,10 +51,22 @@ function BudgetForm({ budget, onSubmit, onSubmitted = () => {} }) {
                 </div>
             </Form.Group>
 
-            <FormButtonConfirm
-                isSubmitting={isSubmitting}
-                text='Create'
+            <ButtonWithSpinner
+                isLoading={isSubmitting}
+                type='submit'
+                variant='primary'
+                text='Confirm'
             />
+
+            <Button 
+                variant='secondary'
+                type='button'
+                className='float-end'
+                onClick={() => reset(budget)}
+            >
+                {'Cancel'}
+            </Button>
+            
         </Form>
     )
 }

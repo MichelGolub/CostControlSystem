@@ -1,19 +1,17 @@
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 
-export { FormButtonConfirm } 
+export { ButtonWithSpinner } 
 
-function FormButtonConfirm({ isSubmitting, text = 'Save', ...props }) {
+function ButtonWithSpinner({ isLoading, text = 'Ok', ...props }) {
     return(
         <Button
-            disabled={isSubmitting}
-            type="submit" 
-            variant="primary"
-            className="float-right"
+            disabled={isLoading}
+            variant='primary'
             {...props}
         >
             {
-                isSubmitting && 
+                isLoading && 
                 <Spinner className="mr-1"
                     as="span"
                     animation="border"

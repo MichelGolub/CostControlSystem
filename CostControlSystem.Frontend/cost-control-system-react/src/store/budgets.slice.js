@@ -1,21 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosInstance } from 'helpers'
-import moment from 'moment'
+import { authActions } from './auth.slice'
 
-const name = 'plans'
+const CURRENT_BUDGET = 'currentBudget'
+
+const name = 'budgets'
 const initialState = createInitialState()
 const extraActions = createExtraActions()
 const extraReducers = createExtraReducers()
 const reducers = createReducers()
 const slice = createSlice({ name, initialState, reducers, extraReducers })
 
-export const plansActions = { ...slice.actions, ...extraActions }
-export const plansReducer = slice.reducer
+export const budgetsActions = { ...slice.actions, ...extraActions }
+export const budgetsReducer = slice.reducer
 
 function createInitialState() {
     return {
-        plan: {},
-        plans : [],
+        currentBudget: JSON.parse(localStorage.getItem(CURRENT_BUDGET)),
+        budgets: [],
         error: null
     }
 }
@@ -23,57 +25,68 @@ function createInitialState() {
 function createReducers() {
     return {
         add,
-        update,
-        remove,
-        clearState: () => initialState
+        edit,
+        removeById,
+        setCurrentBudgetById,
+        clearCurrentBudget
     }
 
     function add(state, action) {
-        state.plans.push(action.payload)
+        state.budgets.push(action.payload)
     }
 
-    function update(state, action) {
-        const updatedPlan = action.payload
-        const idx = state.plans
-            .findIndex(plan => plan.id === updatedPlan.id)
-        state.plans[idx] = updatedPlan
+    function edit(state, action) {
+        const editedBudget = action.payload
+        const idx = state.budgets
+            .findIndex(budget => budget.id === editedBudget.id)
+        state.budgets[idx] = editedBudget
+        if (state.currentBudget?.id === editedBudget.id) {
+            localStorage.setItem(CURRENT_BUDGET, JSON.stringify(editedBudget))
+            state.currentBudget = editedBudget
+        }
     }
 
-    function remove(state, action) {
+    function removeById(state, action) {
         const id = action.payload
-        state.plans = state.plans
-            .filter(plan => plan.id !== id)
+        state.budgets = state.budgets
+            .filter(budget => budget.id !== id)
+        if (state.currentBudget?.id === id) {
+            clearCurrentBudget(state)
+        }
+    }
+
+    function setCurrentBudgetById(state, action) {
+        const id = action.payload
+        const currentBudget = state.budgets
+            .find(b => b.id === id)
+        if (!currentBudget) {
+            return state
+        }
+        localStorage.setItem(CURRENT_BUDGET, JSON.stringify(currentBudget))
+        state.currentBudget = currentBudget
+    }
+
+    function clearCurrentBudget(state) {
+        localStorage.removeItem(CURRENT_BUDGET)
+        state.currentBudget = null
     }
 }
 
 function createExtraActions() {
-    const baseUrl = '/plans'
+    const baseUrl = '/budgetaccounts'
 
     return {
-        get: get(),
         getAll: getAll(),
         create: create(),
         update: update(),
         deleteById: deleteById()
-    }
-    
-    function get() {
-        return createAsyncThunk(
-            `${name}/get`,
-            async (id) => {
-                return await AxiosInstance
-                    .get(`${baseUrl}/${id}`)
-            }
-        )
-    }
+    } 
 
     function getAll() {
         return createAsyncThunk(
             `${name}/getAll`,
-            async (budgetAccountId) => {
-                return await AxiosInstance
-                    .get(baseUrl, null, { params: { budgetAccountId } })
-            }
+            async () => 
+                await AxiosInstance.get(baseUrl)
         )
     }
 
@@ -125,30 +138,15 @@ function createExtraActions() {
 
 function createExtraReducers() {
     return (builder) => {
-        get()
         getAll()
         create()
         update()
         deleteById()
 
-        function get() {
-            const { pending, fulfilled, rejected } = extraActions.get
-            builder
-                .addCase(pending, (state) => {
-                    state.error = null
-                })
-                .addCase(fulfilled, (state, action) => {
-                    const plan = action.payload
-                    plan.startTime = moment(plan.startTime).format('yyyy-MM-DD')
-                    plan.endTime = moment(plan.endTime).format('yyyy-MM-DD')
-                    state.plan = plan
-                    return state
-                })
-                .addCase(rejected, (state, action) => {
-                    state.error = action.error
-                })
-        }
-    
+        builder.addCase(authActions.logout, (state) => {
+            reducers.clearCurrentBudget(state)
+        })
+
         function getAll() {
             const { pending, fulfilled, rejected } = extraActions.getAll
             builder
@@ -156,19 +154,14 @@ function createExtraReducers() {
                     state.error = null
                 })
                 .addCase(fulfilled, (state, action) => {
-                    const plans = action.payload.plans
-                    plans.forEach(plan => {
-                        plan.startTime = moment(plan.startTime).format('yyyy-MM-DD')
-                        plan.endTime = moment(plan.endTime).format('yyyy-MM-DD')
-                    })
-                    state.plans = plans
+                    state.budgets = action.payload
                     return state
                 })
                 .addCase(rejected, (state, action) => {
                     state.error = action.error
                 })
         }
-    
+
         function create() {
             const { pending, fulfilled, rejected } = extraActions.create
             builder
@@ -183,7 +176,7 @@ function createExtraReducers() {
                     state.error = action.error
                 })
         }
-    
+
         function update() {
             const { pending, fulfilled, rejected } = extraActions.update
             builder
@@ -191,14 +184,14 @@ function createExtraReducers() {
                     state.error = null
                 })
                 .addCase(fulfilled, (state, action) => {
-                    reducers.update(state, action)
+                    reducers.edit(state, action)
                     return state
                 })
                 .addCase(rejected, (state, action) => {
                     state.error = action.error
                 })
         }
-    
+
         function deleteById() {
             const { pending, fulfilled, rejected } = extraActions.deleteById
             builder
@@ -206,7 +199,7 @@ function createExtraReducers() {
                     state.error = null
                 })
                 .addCase(fulfilled, (state, action) => {
-                    reducers.remove(state, action)
+                    reducers.removeById(state, action)
                 })
                 .addCase(rejected, (state, action) => {
                     state.error = action.error

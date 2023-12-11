@@ -1,58 +1,25 @@
 import NavDropdown from 'react-bootstrap/NavDropdown'
 
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-
 import { NavDropdownItemCreateBudgetAccount } from './NavDropdownItemCreateBudgetAccount'
+import { NavDropdownItemChangeBudgetAccount } from './NavDropdownItemChangeBudgetAccount'
+import { NavDropdownItemDeleteBudgetAccount } from './NavDropdownItemDeleteBudgetAccount'
+import { NavDropdownItemEditBudgetAccount } from './NavDropdownItemEditBudgetAccount'
+import { useSelector } from 'react-redux'
 
 export { NavDropdownBudgetAccount }
 
 function NavDropdownBudgetAccount() {
-
-    function onChange() {
-        console.log('on Change')
-    }
-
-    function onEdit() {
-        console.log('on Edit')
-    }
-
-    function onDelete() {
-        console.log('on Delete')
-    }
+    const currentBudget = useSelector(x => x.budgets.currentBudget)
 
     return (
         <>
-        <NavDropdown title={'My budget account'} >
-            <NavDropdown.Item 
-                onClick={onChange}
-            >
-                <ChangeCircleIcon />
-                &nbsp;
-                {'Change'}
-            </NavDropdown.Item>
+        <NavDropdown title={currentBudget ? currentBudget.name : 'Select budget account'} >
+            <NavDropdownItemChangeBudgetAccount />
 
             <NavDropdown.Divider />
 
-            <NavDropdown.Item
-                onClick={onEdit}
-                className='text-success'
-            >
-                <EditIcon />
-                &nbsp;
-                {'Edit'}
-            </NavDropdown.Item>
-
-            <NavDropdown.Item 
-                onClick={onDelete}
-                className='text-danger'
-            >
-                <DeleteIcon />
-                &nbsp;
-                {'Delete'}
-            </NavDropdown.Item>
-
+            <NavDropdownItemEditBudgetAccount />
+            <NavDropdownItemDeleteBudgetAccount />
             <NavDropdownItemCreateBudgetAccount />
         </NavDropdown>
         </>

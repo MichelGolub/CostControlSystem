@@ -1,6 +1,3 @@
-import { Provider } from 'react-redux'
-import { store } from 'store'
-
 import {
     useNavigate,
     useLocation
@@ -15,8 +12,6 @@ function App() {
     history.location = useLocation()
     
     return (
-        <Provider store={store}>
-            <TheRouter />
-        </Provider>
+        <TheRouter />
     )
 }

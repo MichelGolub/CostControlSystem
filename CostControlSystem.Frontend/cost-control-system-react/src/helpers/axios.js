@@ -20,12 +20,13 @@ AxiosInstance.interceptors.request.use(configRequest)
 AxiosInstance.interceptors.response.use(hadleResponse, hadleError)
 
 function configRequest(config) {
-    config.headers.authorization = authToken()
+    config.headers.Authorization = authToken()
     return config
 }
 
 function authToken() {
-    return store.getState().auth.token
+    const token = store.getState().auth.user?.token
+    return `Bearer ${token}`
 }
 
 function hadleResponse(response) {

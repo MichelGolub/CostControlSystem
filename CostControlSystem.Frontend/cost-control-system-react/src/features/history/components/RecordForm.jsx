@@ -7,9 +7,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import moment from 'moment'
 
-import { FormButtonConfirm } from 'components/FormButtonConfirm'
-
 import Form from 'react-bootstrap/Form'
+import { ButtonWithSpinner } from 'components'
 
 export { RecordForm }
 
@@ -121,7 +120,12 @@ function RecordForm({ record, onSubmit, onSubmitted }) {
                 />
             </Form.Group>
 
-            <FormButtonConfirm text='Submit' isSubmitting={isSubmitting} />
+            <ButtonWithSpinner
+                isLoading={isSubmitting} 
+                type='submit'
+                variant='primary'
+                text='Confirm'
+            />
         </Form>
     )
 }

@@ -42,7 +42,7 @@ function createReducers() {
 }
 
 function createExtraActions() {
-    const authURL = 'api/auth'
+    const baseURL = 'auth'
 
     return {
         login: login(),
@@ -54,7 +54,7 @@ function createExtraActions() {
         return createAsyncThunk(
             `${name}/login`,
             async ({ email, password }) => await AxiosInstance
-                .post(`${authURL}/token`, { email, password })
+                .post(`${baseURL}/token`, { email, password })
         )
     }
 
@@ -64,7 +64,7 @@ function createExtraActions() {
             async ({ email, password, username }, { rejectWithValue }) => {
                 try{
                     return await AxiosInstance
-                        .post(`${authURL}/register`, { email, password, username })
+                        .post(`${baseURL}/register`, { email, password, username })
                 } catch(err) {
                     return rejectWithValue(err)
                 }
@@ -83,7 +83,7 @@ function createExtraActions() {
                 if (now <= expirationDate) {
                     const token = user.refreshToken
                     return await AxiosInstance
-                        .post(`${authURL}/refresh-token`, {}, { headers: { 'refreshToken': token } })
+                        .post(`${baseURL}/refresh-token`, {}, { headers: { 'refreshToken': token } })
                 } else {
                     dispatch(authActions.logout())
                 }
@@ -99,7 +99,7 @@ function createExtraReducers() {
         refreshToken()
 
         function login() {
-            let { pending, fulfilled, rejected } = extraActions.login
+            const { pending, fulfilled, rejected } = extraActions.login
             builder
                 .addCase(pending, (state) => {
                     state.error = null
@@ -119,7 +119,7 @@ function createExtraReducers() {
         }
     
         function register() {
-            let { pending, fulfilled, rejected } = extraActions.register
+            const { pending, fulfilled, rejected } = extraActions.register
             builder
                 .addCase(pending, (state) => {
                     state.error = null
@@ -133,7 +133,7 @@ function createExtraReducers() {
         }
     
         function refreshToken() {
-            let { pending, fulfilled, rejected } = extraActions.refreshToken
+            const { pending, fulfilled, rejected } = extraActions.refreshToken
             builder
                 .addCase(pending, (state) => {
                     state.error = null

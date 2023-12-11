@@ -8,7 +8,7 @@ function RecordSumDecorator({ sum = 1, ...props }) {
         {
             sum < 0 ?
             <Badge bg='danger' className='mx-2' {...props}>{'expense'}</Badge> : 
-            <Badge bg='success' className='mx-2' {...props}>{'income'}&nbsp;</Badge>
+            <Badge bg='success' className='mx-2' {...props}>{'income'}</Badge>
         }
         {Math.abs(sum)}
         </>
