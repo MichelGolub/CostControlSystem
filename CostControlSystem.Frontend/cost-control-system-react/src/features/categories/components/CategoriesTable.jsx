@@ -4,12 +4,7 @@ import { ButtonDeleteCategory } from './ButtonDeleteCategory'
 
 export { CategoriesTable }
 
-function CategoriesTable({
-    categories = [],
-    editButton = false,
-    deleteButton = false,
-    ...props 
-}) {
+function CategoriesTable({ categories = [], Controls, ...props }) {
 
     if (!categories.length) {
         return 'There is no categories'
@@ -21,7 +16,7 @@ function CategoriesTable({
                 <tr>
                     <th>{'№'}</th>
                     <th>{'Name'}</th>
-                    <th></th>
+                    {!!Controls && <th></th>}
                 </tr>
             </thead>
             <tbody>
@@ -30,22 +25,12 @@ function CategoriesTable({
                     <tr key={category.id} className='align-middle'>
                         <td>{index + 1}</td>
                         <td>{category.name}</td>
-                        <td className='text-end'>
                         {
-                            editButton &&
-                            <ButtonEditCategory
-                                catgory={category}
-                                className='mx-1' 
-                            />
+                            !!Controls &&
+                            <td className='text-end'>
+                                <Controls categoryId={category.id} />
+                            </td>
                         }
-                        {
-                            deleteButton &&
-                            <ButtonDeleteCategory
-                                categoryId={category.id}
-                                className='mx-1' 
-                            />
-                        }
-                        </td>
                     </tr>    
                 )
             }

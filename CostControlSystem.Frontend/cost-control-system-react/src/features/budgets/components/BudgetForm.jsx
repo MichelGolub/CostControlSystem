@@ -66,7 +66,6 @@ function BudgetForm({ budget, onSubmit, onSubmitted = () => {} }) {
             >
                 {'Cancel'}
             </Button>
-            
         </Form>
     )
 }

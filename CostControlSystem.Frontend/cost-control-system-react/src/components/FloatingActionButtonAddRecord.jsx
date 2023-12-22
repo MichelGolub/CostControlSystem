@@ -10,7 +10,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import Fab from '@mui/material/Fab'
 import AddIcon from '@mui/icons-material/Add'
-
+//todo перенести в features/records
 export { FloatingActionButtonAddRecord }
 
 function FloatingActionButtonAddRecord({ ...props }) {

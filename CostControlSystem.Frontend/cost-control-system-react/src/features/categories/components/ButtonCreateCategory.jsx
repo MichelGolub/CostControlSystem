@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { categoriesActions } from 'store'
 
 import { CategoryForm } from './CategoryForm'
 
@@ -11,8 +12,14 @@ import AddIcon from '@mui/icons-material/Add'
 export { ButtonCreateCategory }
 
 function ButtonCreateCategory({ ...props }) {
-    const dispatch = useDispatch()
     const [showModal, setShowModal] = useState(false)
+    
+    const currentBudgetId = useSelector(x => x.budgets.currentBudget?.id)
+    const dispatch = useDispatch()
+
+    const onSubmit = (payload) => {
+        return dispatch(categoriesActions.create(payload))
+    }
 
     return(
         <>
@@ -35,7 +42,8 @@ function ButtonCreateCategory({ ...props }) {
             </Modal.Header>
             <Modal.Body>
                 <CategoryForm
-                    onSubmit={payload => console.log(payload)}
+                    category={{ budgetAccountId: currentBudgetId }}
+                    onSubmit={onSubmit}
                     onSubmitted={() => setShowModal(false)}
                 />
             </Modal.Body>

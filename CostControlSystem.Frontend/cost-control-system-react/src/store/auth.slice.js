@@ -19,6 +19,7 @@ export const authReducer = slice.reducer
 
 function createInitialState() {
     return {
+        //todo заменить localstorage на cookies
         user: JSON.parse(localStorage.getItem('user')),
         error: null
     }

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { budgetsActions } from 'store/budgets.slice'
 
@@ -56,10 +56,10 @@ function NavDropdownItemDeleteBudgetAccount() {
                     onClick={() => onDelete(currentBudget?.id)}
                     variant='danger' 
                     text='Delete'
+                    className='me-auto'
                 />
                 <Button 
-                    variant='secondary' 
-                    className='float-end'
+                    variant='secondary'
                     onClick={() => setShowModal(false)}
                 >
                     {'Cancel'}

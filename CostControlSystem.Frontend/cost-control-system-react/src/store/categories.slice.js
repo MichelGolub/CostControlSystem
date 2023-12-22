@@ -1,24 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosInstance } from 'helpers'
-import { authActions } from './auth.slice'
 
-const CURRENT_BUDGET = 'currentBudget'
-
-const name = 'budgets'
+const name = 'categories'
 const initialState = createInitialState()
 const extraActions = createExtraActions()
 const extraReducers = createExtraReducers()
 const reducers = createReducers()
 const slice = createSlice({ name, initialState, reducers, extraReducers })
 
-export const budgetsActions = { ...slice.actions, ...extraActions }
-export const budgetsReducer = slice.reducer
+export const categoriesActions = { ...slice.actions, ...extraActions }
+export const categoriesReducer = slice.reducer
 
 function createInitialState() {
     return {
-        currentBudget: JSON.parse(localStorage.getItem(CURRENT_BUDGET)),
+        category: {},
+        categories: [],
         isLoading: false,
-        budgets: [],
         error: null
     }
 }
@@ -27,67 +24,59 @@ function createReducers() {
     return {
         add,
         edit,
-        removeById,
-        setCurrentBudgetById,
-        clearCurrentBudget
+        removeById
     }
 
     function add(state, action) {
-        state.budgets.push(action.payload)
+        state.categories.push(action.payload)
     }
 
     function edit(state, action) {
-        const editedBudget = action.payload
-        const idx = state.budgets
-            .findIndex(budget => budget.id === editedBudget.id)
-        state.budgets[idx] = editedBudget
-        if (state.currentBudget?.id === editedBudget.id) {
-            localStorage.setItem(CURRENT_BUDGET, JSON.stringify(editedBudget))
-            state.currentBudget = editedBudget
-        }
+        const editedCategory = action.payload
+        const idx = state.categories
+            .findIndex(category => category.id === editedCategory.id)
+        state.categories[idx] = editedCategory
     }
 
     function removeById(state, action) {
         const id = action.payload
-        state.budgets = state.budgets
-            .filter(budget => budget.id !== id)
-        if (state.currentBudget?.id === id) {
-            clearCurrentBudget(state)
-        }
-    }
-
-    function setCurrentBudgetById(state, action) {
-        const id = action.payload
-        const currentBudget = state.budgets
-            .find(b => b.id === id)
-        if (!currentBudget) {
-            return state
-        }
-        localStorage.setItem(CURRENT_BUDGET, JSON.stringify(currentBudget))
-        state.currentBudget = currentBudget
-    }
-
-    function clearCurrentBudget(state) {
-        localStorage.removeItem(CURRENT_BUDGET)
-        state.currentBudget = null
+        state.categories = state.categories
+            .filter(category => category.id !== id)
     }
 }
 
 function createExtraActions() {
-    const baseUrl = '/budgetaccounts'
+    const baseUrl = '/categories'
 
     return {
+        getById: getById(),
         getAll: getAll(),
         create: create(),
         update: update(),
         deleteById: deleteById()
     } 
 
+    function getById() {
+        return createAsyncThunk(
+            `${name}/getById`,
+            async (id, { rejectWithValue }) => { 
+                try {
+                    return await AxiosInstance
+                        .get(`${baseUrl}/${id}`)
+                } catch {
+                    return rejectWithValue
+                }
+            }
+        )
+    }
+
     function getAll() {
         return createAsyncThunk(
             `${name}/getAll`,
-            async () => 
-                await AxiosInstance.get(baseUrl)
+            async (budgetAccountId) => {
+                return await AxiosInstance
+                    .get(baseUrl, { params: { budgetAccountId } })
+            }
         )
     }
 
@@ -139,14 +128,26 @@ function createExtraActions() {
 
 function createExtraReducers() {
     return (builder) => {
+        getById()
         getAll()
         create()
         update()
         deleteById()
 
-        builder.addCase(authActions.logout, (state) => {
-            reducers.clearCurrentBudget(state)
-        })
+        function getById() {
+            const { pending, fulfilled, rejected } = extraActions.getById
+            builder
+                .addCase(pending, (state) => {
+                    state.error = null
+                })
+                .addCase(fulfilled, (state, action) => {
+                    state.category = action.payload
+                    return state
+                })
+                .addCase(rejected, (state, action) => {
+                    state.error = action.error
+                })
+        }
 
         function getAll() {
             const { pending, fulfilled, rejected } = extraActions.getAll
@@ -156,7 +157,7 @@ function createExtraReducers() {
                     state.isLoading = true
                 })
                 .addCase(fulfilled, (state, action) => {
-                    state.budgets = action.payload
+                    state.categories = action.payload
                     state.isLoading = false
                     return state
                 })

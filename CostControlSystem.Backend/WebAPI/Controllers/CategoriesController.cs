@@ -6,6 +6,7 @@ using Application.Features.Categories.Queries.GetCategoriesList;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Categories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
@@ -17,19 +18,22 @@ namespace WebApi.Controllers
             _mapper = mapper;
 
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<GetCategoryDetailsVm>> Get(Guid id)
         {
             var query = new GetCategoryDetailsQuery
             {
-                Id = id
+                Id = id,
+                UserId = UserId
             };
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IList<CategoryDto>>> GetAllByBudgetAccount
@@ -37,13 +41,15 @@ namespace WebApi.Controllers
         {
             var query = new GetCategoriesListQuery
             {
-                BudgetAccountId = budgetAccountId
+                BudgetAccountId = budgetAccountId,
+                UserId = UserId
             };
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Guid>> Create
@@ -54,24 +60,28 @@ namespace WebApi.Controllers
             return Ok(categoryId);
         }
 
-        [HttpPut ("Update")]
+        [HttpPut]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Update([FromBody] UpdateCategoryDto updateRecordDto)
         {
             var command = _mapper.Map<UpdateCategoryCommand>(updateRecordDto);
+            command.UserId = UserId;
             await Mediator.Send(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var command = new DeleteCategoryCommand
             {
-                Id = id
+                Id = id,
+                UserId = UserId
             };
             await Mediator.Send(command);
             return NoContent();

@@ -6,12 +6,12 @@ import { object, shape, string } from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import { ButtonWithSpinner } from 'components'
 
 export { CategoryForm }
 
 function CategoryForm({ category, onSubmit, onSubmitted = () => {} }) {
-
     const validationSchema = object().shape({
         name: string().required()
     })
@@ -54,11 +54,20 @@ function CategoryForm({ category, onSubmit, onSubmitted = () => {} }) {
             </Form.Group>
 
             <ButtonWithSpinner
-                isLoading={isSubmitting} 
+                isLoading={isSubmitting}
                 type='submit'
                 variant='primary'
                 text='Confirm'
             />
+
+            <Button 
+                variant='secondary'
+                type='button'
+                className='float-end'
+                onClick={() => reset(category)}
+            >
+                {'Cancel'}
+            </Button>
         </Form>
     )
 }

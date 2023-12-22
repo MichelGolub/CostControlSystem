@@ -1,18 +1,25 @@
 import { useState } from 'react'
+
 import { useDispatch } from 'react-redux'
+import { categoriesActions } from 'store'
 
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { ButtonWithSpinner } from 'components'
 
 export { ButtonDeleteCategory }
 
 function ButtonDeleteCategory({ categoryId, ...props }) {
-    const dispatch = useDispatch()
     const [showModal, setShowModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    
+    const dispatch = useDispatch()
 
-    function onDelete() {
-        console.log(categoryId)
+    const onDelete = async () => {
+        setIsLoading(true)
+        await dispatch(categoriesActions.deleteById(categoryId))
+        setIsLoading(false)
         setShowModal(false)
     }
 
@@ -34,23 +41,24 @@ function ButtonDeleteCategory({ categoryId, ...props }) {
             animation={false}
         >
             <Modal.Header closeButton>
-                <Modal.Title>{'Confirmation'}</Modal.Title>
+                <Modal.Title>{'Delete category?'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h5>{'Delete category?'}</h5>
+                {'Are you sure you want to delete category?'}
             </Modal.Body>
             <Modal.Footer>
+                <ButtonWithSpinner
+                    isLoading={isLoading}
+                    onClick={onDelete}
+                    variant='danger'
+                    text='Delete'
+                    className='me-auto'
+                />
                 <Button 
-                    variant='secondary' 
+                    variant='secondary'
                     onClick={() => setShowModal(false)}
                 >
                     {'Cancel'}
-                </Button>
-                <Button 
-                    variant='primary' 
-                    onClick={onDelete}
-                >
-                    {'Confirm'}
                 </Button>
             </Modal.Footer>
         </Modal>

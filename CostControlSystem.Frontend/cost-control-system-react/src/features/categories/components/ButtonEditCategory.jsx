@@ -1,23 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { categoriesActions } from 'store'
 
 import { CategoryForm } from './CategoryForm'
 
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import EditIcon from '@mui/icons-material/Edit'
+import { Spinner } from 'react-bootstrap'
 
 export { ButtonEditCategory }
 
-function ButtonEditCategory({ category, ...props }) {
-    const dispatch = useDispatch()
+function ButtonEditCategory({ categoryId, ...props }) {
     const [showModal, setShowModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const { category } = useSelector(x => x.categories)
+    const dispatch = useDispatch()
+
+    const loadCategory = () => {
+        setShowModal(true)
+        setIsLoading(true)
+        dispatch(categoriesActions.getById(categoryId))
+        .then(() => {
+            setIsLoading(false)
+        })
+    }
+
+    const onSubmit = (payload) => {
+        dispatch(categoriesActions.update(payload))
+    }
 
     return(
         <>
         <Button 
-            onClick={() => {setShowModal(true)}}
+            onClick={loadCategory}
             variant='success'
             {...props}
         >
@@ -35,11 +53,19 @@ function ButtonEditCategory({ category, ...props }) {
                 <Modal.Title>{'Edit category'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <CategoryForm
-                    category={category}
-                    onSubmit={payload => console.log(payload)}
-                    onSubmitted={() => setShowModal(false)}
-                />
+                {
+                    isLoading
+                    ?
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">{'Loading...'}</span>
+                    </Spinner>
+                    :
+                    <CategoryForm
+                        category={category}
+                        onSubmit={onSubmit}
+                        onSubmitted={() => setShowModal(false)}
+                    />
+                }
             </Modal.Body>
         </Modal>
         </>
