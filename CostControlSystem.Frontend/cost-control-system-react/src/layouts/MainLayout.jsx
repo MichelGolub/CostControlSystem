@@ -1,12 +1,10 @@
-import { TheNavbar } from 'components'
+import Navbar from 'components/Navbar/Navbar'
 import Container from 'react-bootstrap/Container'
-import { FloatingActionButtonAddRecord } from 'components/FloatingActionButtonAddRecord'
 
 export default function MainLayout({ children }) {
     return(
         <>
-            <TheNavbar />
-            <FloatingActionButtonAddRecord />
+            <Navbar />
             <Container>
                 {children}
             </Container>

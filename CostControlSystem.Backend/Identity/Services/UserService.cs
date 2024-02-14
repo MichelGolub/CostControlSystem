@@ -5,6 +5,7 @@ using Identity.Enums;
 using Identity.Exceptions;
 using Identity.Models;
 using Identity.Settings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -69,11 +70,11 @@ namespace Identity.Services
         {
             var authModel = new AuthenticationModel();
             var user = await _userManager.FindByEmailAsync(model.Email)
-                ?? throw new UserNotFoundException(model.Email);
+                ?? throw new IncorrectCredentialsException();
 
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                throw new IncorrectPasswordException();
+                throw new IncorrectCredentialsException();
             }
 
             JwtSecurityToken jwtSecurityToken = await CreateJwtToken(user);
@@ -158,7 +159,7 @@ namespace Identity.Services
             var authModel = new AuthenticationModel();
             var user = _context.Users.SingleOrDefault
                 (u => u.RefreshTokens.Any(t => t.Token == token))
-                ?? throw new UserNotFoundException();
+                ?? throw new IncorrectCredentialsException();
 
             var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
             if (!refreshToken.IsActive)

@@ -1,14 +1,13 @@
-import { Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { selectIsAuthenticated } from 'app/slices/auth.slice'
 
-import { history } from 'helpers'
+import { Navigate } from 'react-router-dom'
+import { history } from 'helpers/history'
 
-export { PrivateRoute }
+export default function PrivateRoute({ children }) {
+    const isAuthenticated = useSelector(selectIsAuthenticated)
 
-function PrivateRoute({ children }) {
-    const { user: authUser } = useSelector(x => x.auth)
-
-    if (!authUser) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" state={{ from: history.location }} />
     }
 

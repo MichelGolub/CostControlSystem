@@ -47,17 +47,13 @@ namespace WebAPI.Middleware
                     code = HttpStatusCode.Conflict;
                     result = JsonSerializer.Serialize(conflictException1.Message);
                     break;
-                case IncorrectPasswordException incorrectPasswordException:
+                case IncorrectCredentialsException incorrectPasswordException:
                     code = HttpStatusCode.Unauthorized;
                     result = JsonSerializer.Serialize(incorrectPasswordException.Message);
                     break;
                 case UnauthorizedException unauthorizedException:
                     code = HttpStatusCode.Unauthorized;
                     result = JsonSerializer.Serialize(unauthorizedException.Message);
-                    break;
-                case UserNotFoundException userNotFoundException:
-                    code = HttpStatusCode.NotFound;
-                    result = JsonSerializer.Serialize(userNotFoundException.Message);
                     break;
             }
             context.Response.ContentType= "application/json";

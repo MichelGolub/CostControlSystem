@@ -2,16 +2,21 @@ import {
     useNavigate,
     useLocation
 } from 'react-router-dom'
-import { history } from 'helpers'
-import { TheRouter } from 'components'
+import { history } from 'helpers/history'
+import Router from 'components/Router'
+import { ToastContainer } from 'react-toastify'
 
-export { App }
-
-function App() {
+export default function App() {
     history.navigate = useNavigate()
     history.location = useLocation()
     
     return (
-        <TheRouter />
+        <>
+            <Router />
+            <ToastContainer 
+                position='bottom-right'
+                autoClose={3200}
+            />
+        </>
     )
 }

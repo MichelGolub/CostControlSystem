@@ -8,7 +8,8 @@ using Application.Common.Mappings;
 using Identity;
 using Identity.Contexts;
 using Persistance;
-using Microsoft.Extensions.Options;
+
+const string AllowSpecificOrigins = "_AllowSpecificOrigin";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +25,12 @@ builder.Services.AddIdentityInfrastructure(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy(AllowSpecificOrigins, policy =>
     {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 builder.Services.AddEndpointsApiExplorer();
@@ -87,9 +89,9 @@ using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 
 app.UseCustomExceptionHandler();
 
-app.UseRouting();
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseRouting();
+app.UseCors(AllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
