@@ -1,22 +1,22 @@
 import { useState } from 'react'
+import { useGetBudgetAccountsQuery } from 'app/services/budgets'
+
+import LoadingWrapper from 'components/LoadingWrapper'
+import BudgetAccountsTable from 'features/budgetAccounts/BudgetAccountsTable'
 
 import NavDropdown from 'react-bootstrap/NavDropdown'
-import Spinner from 'react-bootstrap/Spinner'
 import Modal from 'react-bootstrap/Modal'
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle'
 
 export default function ChangeBudgetAccountDropdownItem() {
-
     const [showModal, setShowModal] = useState(false)
 
-    const showModalForm = () => {
-        setShowModal(true)
-    }
+    const { data: budgets, isFetching } = useGetBudgetAccountsQuery()
 
     return (
         <>
         <NavDropdown.Item
-            onClick={showModalForm}
+            onClick={() => setShowModal(true)}
         >
             <ChangeCircleIcon />
             &nbsp;
@@ -32,11 +32,11 @@ export default function ChangeBudgetAccountDropdownItem() {
                 <Modal.Title>{'Change budget account'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">{'Loading...'}</span>
-                    </Spinner>
-                }
+            {
+                <LoadingWrapper isLoading={isFetching}>
+                    <BudgetAccountsTable budgets={budgets} />
+                </LoadingWrapper>
+            }
             </Modal.Body>
         </Modal>
         </>

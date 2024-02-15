@@ -45,3 +45,6 @@ export const selectIsAuthenticated = (state) =>
 
 export const selectCurrentUser = (state) =>
     state.auth.user
+
+export const selectCurrentUserId = (state) =>
+    state.auth.user.id
