@@ -3,6 +3,7 @@ import { useGetBudgetAccountsQuery } from 'app/services/budgets'
 
 import LoadingWrapper from 'components/LoadingWrapper'
 import BudgetAccountsTable from 'features/budgetAccounts/BudgetAccountsTable'
+import SelectBudgetAccountButton from 'features/budgetAccounts/SelectBudgetAccountButton'
 
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Modal from 'react-bootstrap/Modal'
@@ -32,9 +33,19 @@ export default function ChangeBudgetAccountDropdownItem() {
                 <Modal.Title>{'Change budget account'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            {
+            {//todo: add fetching errors handling
                 <LoadingWrapper isLoading={isFetching}>
-                    <BudgetAccountsTable budgets={budgets} />
+                    <BudgetAccountsTable 
+                        budgets={budgets}
+                        Controls={(budget) => (
+                            <>
+                                <SelectBudgetAccountButton 
+                                    className='mx-1'
+                                    budget={budget}
+                                />
+                            </>
+                        )}
+                    />
                 </LoadingWrapper>
             }
             </Modal.Body>
