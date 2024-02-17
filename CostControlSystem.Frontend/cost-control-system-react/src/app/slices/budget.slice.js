@@ -78,3 +78,6 @@ export const selectCurrentBudgetId = (state) =>
 
 export const selectCurrentBudgetName = (state) =>
     state.budget.currentBudget?.name
+
+export const selectCurrentBudget = (state) =>
+    state.budget.currentBudget

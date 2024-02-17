@@ -15,8 +15,8 @@ export const budgetAccountsApi = api.injectEndpoints({
             })
         }),
         updateBudgetAccount: build.mutation({
-            query: (data) => {
-                const { id, ...body } = data
+            query: (body) => {
+                const { id } = body
                 return {
                     url: `${CONTROLLER_NAME}/${id}`,
                     method: 'PUT',

@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button'
 import ButtonWithSpinner from 'components/ButtonWithSpinner'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 
-export default function BudgetAccountForm({ onSubmit, budget, error }) {
+export default function BudgetAccountForm({ onSubmit, budget, error, buttonText = 'Create' }) {
     const validationSchema = createValidationSchema()
     const formOptions = { resolver: yupResolver(validationSchema) }
 
@@ -52,7 +52,7 @@ export default function BudgetAccountForm({ onSubmit, budget, error }) {
             <ButtonWithSpinner
                 isLoading={isSubmitting}
                 Icon={ArrowUpwardIcon}
-                text='Create'
+                text={buttonText}
                 type='submit'
             />
 
