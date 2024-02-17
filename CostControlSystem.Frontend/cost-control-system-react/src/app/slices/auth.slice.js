@@ -12,10 +12,11 @@ const slice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        logout: () => {
+        logout: (state) => {
             history.navigate('/login')
             localStorage.removeItem(USER)
-            return initialState
+            state.user = null
+            state.token = null
         },
         tokenReceived: (state, action) => {
             state.token = action.payload.token

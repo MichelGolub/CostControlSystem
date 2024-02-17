@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import { api } from './services/api'
 import auth from './slices/auth.slice'
-import budgetAccount from './slices/budget.slice'
+import budget from './slices/budget.slice'
 
 export const createStore = (options) => {
     return (
@@ -10,7 +10,7 @@ export const createStore = (options) => {
             reducer: {
                 [api.reducerPath]: api.reducer,
                 auth,
-                budgetAccount
+                budget
             },
             middleware: (getDefaultMiddleware) => 
                 getDefaultMiddleware().concat(api.middleware),

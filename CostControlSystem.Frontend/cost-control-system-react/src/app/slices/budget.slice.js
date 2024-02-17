@@ -20,8 +20,8 @@ const slice = createSlice({
         onDeleteBudgetAccount()
 
         function onLogout() {
-            builder.addCase(logout, () => {
-                reducers.clearCurrentBudget()
+            builder.addCase(logout, (state) => {
+                reducers.clearCurrentBudget(state)
             })
         }
 
@@ -29,10 +29,10 @@ const slice = createSlice({
             builder
                 .addMatcher(budgetAccountsApi.endpoints
                     .updateBudgetAccount.matchFulfilled, (state, action) => {
-                    const updatedBudgetAccount = action.payload
-                    if (state.currentBudgetAccount.id === updatedBudgetAccount.id) {
-                        reducers.setCurrentBudget(state, action)
-                    }
+                        const updatedBudgetAccount = action.payload
+                        if (state.currentBudget.id === updatedBudgetAccount.id) {
+                            reducers.setCurrentBudget(state, action)
+                        }
                 })
         }
 
@@ -40,10 +40,10 @@ const slice = createSlice({
             builder
                 .addMatcher(budgetAccountsApi.endpoints
                     .deleteBudgetAccount.matchFulfilled, (state, action) => {
-                    const deletedBudgetAccount = action.payload
-                    if (state.currentBudgetAccount.id === deletedBudgetAccount.id) {
-                        reducers.clearCurrentBudget()
-                    }
+                        const deletedBudgetAccount = action.payload
+                        if (state.currentBudget.id === deletedBudgetAccount.id) {
+                            reducers.clearCurrentBudget(state)
+                        }
                 })
         }
     }
@@ -55,26 +55,26 @@ function createReducers() {
         setCurrentBudget
     }
 
-    function clearCurrentBudget() {
+    function clearCurrentBudget(state) {
         localStorage.removeItem(CURRENT_BUDGET)
-        return initialState
+        state.currentBudget = null
     }
 
     function setCurrentBudget(state, action) {
         const budget = action.payload
         localStorage.setItem(CURRENT_BUDGET, JSON.stringify(budget))
-        state.budget = budget
+        state.currentBudget = budget
     }
 }
 
 export const {
-    clearCurrentBudget,
     setCurrentBudget
 } = slice.actions
 
 export default slice.reducer
 
 export const selectCurrentBudgetId = (state) => 
-    state.currentBudgetAccount?.id
-export const selectCurrentBudget = (state) =>
-    state.currentBudgetAccount
+    state.budget.currentBudget?.id
+
+export const selectCurrentBudgetName = (state) =>
+    state.budget.currentBudget?.name

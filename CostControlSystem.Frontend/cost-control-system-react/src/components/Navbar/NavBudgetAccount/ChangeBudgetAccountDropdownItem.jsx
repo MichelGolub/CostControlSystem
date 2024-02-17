@@ -37,7 +37,7 @@ export default function ChangeBudgetAccountDropdownItem() {
                 <LoadingWrapper isLoading={isFetching}>
                     <BudgetAccountsTable 
                         budgets={budgets}
-                        Controls={(budget) => (
+                        Controls={({budget}) => (
                             <>
                                 <SelectBudgetAccountButton 
                                     className='mx-1'
