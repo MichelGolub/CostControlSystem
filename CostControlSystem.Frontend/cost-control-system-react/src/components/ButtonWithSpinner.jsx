@@ -17,12 +17,12 @@ export default function ButtonWithSpinner({
                 isLoading 
                 ? 
                     <>
-                        <Spinner className="mr-1"
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
+                        <Spinner className='mr-1'
+                            as='span'
+                            animation='border'
+                            size='sm'
+                            role='status'
+                            aria-hidden='true'
                         />
                         &nbsp; 
                     </> 

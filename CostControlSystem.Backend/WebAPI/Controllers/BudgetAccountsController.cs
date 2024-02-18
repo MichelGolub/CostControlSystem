@@ -8,7 +8,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.BudgetAccounts;
-
+using WebAPI.Models.BudgetAccounts;
 
 namespace WebApi.Controllers
 {
@@ -57,16 +57,18 @@ namespace WebApi.Controllers
             return Ok(resp);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> Update([FromBody] BudgetAccount budgetAccount)
+        public async Task<IActionResult> Update
+            (Guid id, [FromBody] UpdateBudgetAccountDto updateBudgetAccountDto)
         {
-            var command = new UpdateBudgetAccountCommand
+            if (updateBudgetAccountDto.Id != (id))
             {
-                UserId = UserId,
-                Id = budgetAccount.Id,
-                Name = budgetAccount.Name
-            };
+                return Conflict();
+            }
+            var command = _mapper
+                .Map<UpdateBudgetAccountCommand>(updateBudgetAccountDto);
+            command.UserId = UserId;
             await Mediator.Send(command);
             return NoContent();
         }
