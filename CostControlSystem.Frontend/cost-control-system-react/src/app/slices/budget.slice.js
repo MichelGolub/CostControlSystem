@@ -29,8 +29,9 @@ const slice = createSlice({
             builder
                 .addMatcher(budgetAccountsApi.endpoints
                     .updateBudgetAccount.matchFulfilled, (state, action) => {
-                        const updatedBudgetAccount = action.payload
+                        const updatedBudgetAccount = action.meta.arg.originalArgs
                         if (state.currentBudget.id === updatedBudgetAccount.id) {
+                            action.payload = updatedBudgetAccount
                             reducers.setCurrentBudget(state, action)
                         }
                 })
@@ -40,8 +41,8 @@ const slice = createSlice({
             builder
                 .addMatcher(budgetAccountsApi.endpoints
                     .deleteBudgetAccount.matchFulfilled, (state, action) => {
-                        const deletedBudgetAccount = action.payload
-                        if (state.currentBudget.id === deletedBudgetAccount.id) {
+                        const deletedBudgetAccountId = action.meta.arg.originalArgs
+                        if (state.currentBudget.id === deletedBudgetAccountId) {
                             reducers.clearCurrentBudget(state)
                         }
                 })

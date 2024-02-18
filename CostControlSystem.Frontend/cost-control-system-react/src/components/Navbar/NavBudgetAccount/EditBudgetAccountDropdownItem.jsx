@@ -26,7 +26,6 @@ export default function EditBudgetAccountDropdownItem() {
         }
     }
 
-
     return (
         <>
         <NavDropdown.Item
