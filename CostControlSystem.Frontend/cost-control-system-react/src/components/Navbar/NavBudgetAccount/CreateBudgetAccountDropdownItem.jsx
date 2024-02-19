@@ -1,10 +1,8 @@
 import { useState } from 'react'
-
 import { useAddBudgetAccountMutation } from 'app/services/budgets'
+import { toast } from 'react-toastify'
 
 import BudgetAccountForm from 'features/budgetAccounts/BudgetAccountForm'
-
-import { toast } from 'react-toastify'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Modal from 'react-bootstrap/Modal'
 import AddIcon from '@mui/icons-material/Add'
