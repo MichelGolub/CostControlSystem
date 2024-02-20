@@ -1,12 +1,13 @@
 import Table from 'react-bootstrap/Table'
+import { ButtonEditCategory } from './ButtonEditCategory'
+import { ButtonDeleteCategory } from './ButtonDeleteCategory'
 
-export default function BudgetAccountsTable({ 
-    budgets = [],
-    Controls,
-    ...props 
-}) {
-    if (!budgets.length) {
-        return <span>{'There is no budget accounts'}</span>
+export { CategoriesTable }
+
+function CategoriesTable({ categories = [], Controls, ...props }) {
+
+    if (!categories.length) {
+        return 'There is no categories'
     }
 
     return (
@@ -20,17 +21,17 @@ export default function BudgetAccountsTable({
             </thead>
             <tbody>
             {
-                budgets.map((budget, index) => 
-                    <tr key={budget.id} className='align-middle'>
+                categories.map((category, index) => 
+                    <tr key={category.id} className='align-middle'>
                         <td>{index + 1}</td>
-                        <td>{budget.name}</td>
+                        <td>{category.name}</td>
                         {
                             !!Controls &&
                             <td className='text-end'>
-                                <Controls budget={budget} />
+                                <Controls categoryId={category.id} />
                             </td>
                         }
-                    </tr>
+                    </tr>    
                 )
             }
             </tbody>

@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Categories;
 using Microsoft.AspNetCore.Authorization;
+using WebAPI.Models.BudgetAccounts;
 
 namespace WebApi.Controllers
 {
@@ -60,13 +61,18 @@ namespace WebApi.Controllers
             return Ok(categoryId);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> Update([FromBody] UpdateCategoryDto updateRecordDto)
+        public async Task<ActionResult> Update
+            (Guid id, [FromBody] UpdateCategoryDto updateCategoryDto)
         {
-            var command = _mapper.Map<UpdateCategoryCommand>(updateRecordDto);
+            if (updateCategoryDto.Id != id)
+            {
+                return Conflict();
+            }
+            var command = _mapper.Map<UpdateCategoryCommand>(updateCategoryDto);
             command.UserId = UserId;
             await Mediator.Send(command);
             return NoContent();

@@ -1,12 +1,11 @@
 import Table from 'react-bootstrap/Table'
 
-export default function BudgetAccountsTable({ 
-    budgets = [],
-    Controls,
-    ...props 
-}) {
+export { BudgetsTable }
+
+function BudgetsTable({ budgets = [], Controls, ...props }) {
+
     if (!budgets.length) {
-        return <span>{'There is no budget accounts'}</span>
+        return 'There is no budgets'
     }
 
     return (
@@ -27,7 +26,7 @@ export default function BudgetAccountsTable({
                         {
                             !!Controls &&
                             <td className='text-end'>
-                                <Controls budget={budget} />
+                                <Controls budgetId={budget.id} />
                             </td>
                         }
                     </tr>

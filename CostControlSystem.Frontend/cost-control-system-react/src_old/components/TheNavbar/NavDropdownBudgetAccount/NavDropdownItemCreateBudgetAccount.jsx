@@ -1,26 +1,22 @@
 import { useState } from 'react'
-import { useAddBudgetAccountMutation } from 'app/services/budgets'
-import { toast } from 'react-toastify'
 
-import BudgetAccountForm from 'features/budgetAccounts/BudgetAccountForm'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Modal from 'react-bootstrap/Modal'
 import AddIcon from '@mui/icons-material/Add'
 
-export default function CreateBudgetAccountDropdownItem() {
+import { BudgetForm } from 'features/budgets'
+import { useDispatch } from 'react-redux'
+import { budgetsActions } from 'store'
+
+export { NavDropdownItemCreateBudgetAccount }
+
+function NavDropdownItemCreateBudgetAccount() {
     const [showModal, setShowModal] = useState(false)
 
-    const [addBudgetAccount, { error }] = useAddBudgetAccountMutation()
+    const dispatch = useDispatch()
 
-    async function onSubmit(values) {
-        try {
-            await addBudgetAccount(values)
-                .unwrap()
-            toast.success('Budget account created')
-            setShowModal(false)
-        } catch {
-            console.error('add budget account: submitting error')
-        }
+    const onSubmit = (payload) => {
+        return dispatch(budgetsActions.create(payload))
     }
 
     return (
@@ -43,9 +39,9 @@ export default function CreateBudgetAccountDropdownItem() {
                 <Modal.Title>{'Create budget account'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <BudgetAccountForm 
+                <BudgetForm
                     onSubmit={onSubmit}
-                    error={error}
+                    onSubmitted={() => setShowModal(false)}
                 />
             </Modal.Body>
         </Modal>
