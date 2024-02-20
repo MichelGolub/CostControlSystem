@@ -62,7 +62,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Update
             (Guid id, [FromBody] UpdateBudgetAccountDto updateBudgetAccountDto)
         {
-            if (updateBudgetAccountDto.Id != (id))
+            if (updateBudgetAccountDto.Id != id)
             {
                 return Conflict();
             }
