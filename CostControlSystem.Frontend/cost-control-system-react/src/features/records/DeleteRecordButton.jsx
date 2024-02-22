@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDeleteCategoryMutation } from 'app/services/categories'
+import { useDeleteRecordMutation } from 'app/services/records'
 import { toast } from 'react-toastify'
 
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -7,22 +7,22 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ButtonWithSpinner from 'components/ButtonWithSpinner'
 
-export default function DeleteCategoryButton({
-    category,
+export default function DeleteRecordButton({
+    record,
     ...props
 }) {
     const [showModal, setShowModal] = useState(false)
 
-    const [deleteCategory, { isLoading }] = useDeleteCategoryMutation()
+    const [deleteRecord, { isLoading }] = useDeleteRecordMutation()
 
     async function onDelete() {
         try {
-            await deleteCategory(category.id)
+            await deleteRecord(record.id)
                 .unwrap()
-            toast.success('Category deleted')
+            toast.success('Record deleted')
             setShowModal(false)
         } catch {
-            console.error('delete category: submitting error')
+            console.error('delete record: submitting error')
         }
     }
 
@@ -44,11 +44,11 @@ export default function DeleteCategoryButton({
             animation={false}
         >
             <Modal.Header closeButton>
-                <Modal.Title>{'Delete category?'}</Modal.Title>
+                <Modal.Title>{'Delete record?'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {'Are you sure you want to delete '}
-                <b>{category.name}</b>
+                {'Are you sure you want to delete record from '}
+                <b>{record.date}</b>
                 {' ?'}
             </Modal.Body>
             <Modal.Footer>
