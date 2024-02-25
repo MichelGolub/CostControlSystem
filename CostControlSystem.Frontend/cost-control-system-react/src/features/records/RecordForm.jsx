@@ -11,6 +11,8 @@ import Button from 'react-bootstrap/Button'
 import ButtonWithSpinner from 'components/ButtonWithSpinner'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import { useGetCategoriesQuery } from 'app/services/categories'
+import { useSelector } from 'react-redux'
+import { selectCurrentBudgetId } from 'app/slices/budget.slice'
 
 export default function RecordForm({ 
     onSubmit,
@@ -24,21 +26,23 @@ export default function RecordForm({
     const { register, handleSubmit, formState, reset } = useForm(formOptions)
     const { errors, isSubmitting } = formState
 
+    const budgetAccountId = useSelector(selectCurrentBudgetId)
+    const { data: categories } = useGetCategoriesQuery(budgetAccountId)
+
     useEffect(() => {
-        const expandedRecord = createDefaultExpandedRecord(record)
-        console.log(expandedRecord)
-        reset(expandedRecord)
+        fillForm(record)
     }, [record])
+
+    function fillForm(record) {
+        record = replaceNullsByDefault(record)
+        const expandedRecord = expandRecord(record)
+        reset(expandedRecord)
+    }
 
     const prepareSubmitting = async (values) => {
         const record = collapseRecord(values)
         return onSubmit(record)
     }
-
-    const { 
-        data: categories,
-        isFetching 
-    } = useGetCategoriesQuery(record.budgetAccountId)
 
     return (
         <Form 
@@ -47,12 +51,6 @@ export default function RecordForm({
         >
             <Form.Control
                 {...register('id')}
-                type='text'
-                hidden
-            />
-
-            <Form.Control
-                {...register('budgetAccountId')}
                 type='text'
                 hidden
             />
@@ -94,7 +92,7 @@ export default function RecordForm({
                 <Form.Label>{'Category'}</Form.Label>
                 <Form.Select 
                     {...register('categoryId')} 
-                    disabled={isFetching || !categories?.length} 
+                    disabled={!categories?.length} 
                 >
                     {
                         categories?.map((category, index) => 
@@ -120,7 +118,7 @@ export default function RecordForm({
             }
 
             <ButtonWithSpinner
-                isLoading={isSubmitting || isFetching}
+                isLoading={isSubmitting}
                 Icon={ArrowUpwardIcon}
                 text={buttonText}
                 type='submit'
@@ -130,7 +128,7 @@ export default function RecordForm({
                 variant='secondary'
                 type='button'
                 className='float-end'
-                onClick={() => reset(createDefaultExpandedRecord(record))}
+                onClick={() => fillForm(record)}
             >
                 {'Cancel'}
             </Button>
@@ -147,13 +145,12 @@ function createValidationSchema() {
     })
 }
 
-function createDefaultExpandedRecord(record) {
-    record = {
+function replaceNullsByDefault(record) {
+    return {
         date: moment().format('yyyy-MM-DD'),
         sum: -100,
         ...record
     }
-    return expandRecord(record)
 }
 
 function expandRecord(record) {

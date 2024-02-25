@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { selectCurrentBudgetId } from 'app/slices/budget.slice'
 import { useAddRecordMutation } from 'app/services/records'
 import { toast } from 'react-toastify'
 
@@ -12,7 +10,6 @@ import RecordForm from 'features/records/RecordForm'
 export default function CreateRecordButton({ ...props }) {
     const [showModal, setShowModal] = useState(false)
 
-    const currentBudgetId = useSelector(selectCurrentBudgetId)
     const [addRecord, { isLoading, error }] = useAddRecordMutation()
 
     async function onSubmit(values) {
@@ -50,7 +47,6 @@ export default function CreateRecordButton({ ...props }) {
                     onSubmit={onSubmit}
                     error={error}
                     buttonText='Add record'
-                    record={{ budgetAccountId: currentBudgetId }}
                 />
             </Modal.Body>
         </Modal>
