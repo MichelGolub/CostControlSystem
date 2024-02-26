@@ -9,7 +9,7 @@ namespace WebApi.Models.Records
         public Guid Id { get; set; }
         public Guid CategoryId { get; set; }
         public decimal Sum { get; set; }
-        public DateTime CreateTime { get; set; }
+        public DateTime Date { get; set; }
 
         public void Mapping(Profile profile)
         {
@@ -21,7 +21,7 @@ namespace WebApi.Models.Records
                 .ForMember(command => command.Sum,
                     opt => opt.MapFrom(dto => dto.Sum))
                 .ForMember(command => command.Date,
-                    opt => opt.MapFrom(dto => dto.CreateTime));
+                    opt => opt.MapFrom(dto => dto.Date));
         }
     }
 }

@@ -27,13 +27,16 @@ export default function RecordForm({
     const { errors, isSubmitting } = formState
 
     const budgetAccountId = useSelector(selectCurrentBudgetId)
-    const { data: categories } = useGetCategoriesQuery(budgetAccountId)
+    const { data: categories, isFetching } = useGetCategoriesQuery(budgetAccountId)
 
     useEffect(() => {
         fillForm(record)
     }, [record])
 
     function fillForm(record) {
+        if(record) {
+            record.date = moment(record.date).format('yyyy-MM-DD')
+        }
         record = replaceNullsByDefault(record)
         const expandedRecord = expandRecord(record)
         reset(expandedRecord)
@@ -90,12 +93,16 @@ export default function RecordForm({
 
             <Form.Group className='mb-3'>
                 <Form.Label>{'Category'}</Form.Label>
-                <Form.Select 
-                    {...register('categoryId')} 
-                    disabled={!categories?.length} 
-                >
+                {
+                    isFetching 
+                    ?
+                    <Form.Select disabled/> 
+                    :
+                    <Form.Select 
+                        {...register('categoryId')} 
+                    >
                     {
-                        categories?.map((category, index) => 
+                        categories.map((category, index) => 
                         <option 
                             key={index}
                             value={category.id}
@@ -104,7 +111,9 @@ export default function RecordForm({
                         </option>
                         )
                     }
-                </Form.Select>
+                    </Form.Select>
+                }
+                
             </Form.Group>
 
             {
@@ -121,6 +130,7 @@ export default function RecordForm({
                 isLoading={isSubmitting}
                 Icon={ArrowUpwardIcon}
                 text={buttonText}
+                disabled={isFetching}
                 type='submit'
             />
 

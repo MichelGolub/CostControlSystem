@@ -3,6 +3,7 @@ import SumBadge from 'components/SumBadge'
 import moment from 'moment'
 
 //todo вынести обертку таблицы
+//todo откорректировать часовой пояс
 export default function RecordsTable({ 
     records = [],
     Controls,

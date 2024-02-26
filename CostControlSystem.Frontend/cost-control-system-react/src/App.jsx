@@ -14,7 +14,7 @@ export default function App() {
         <>
             <Router />
             <ToastContainer 
-                position='bottom-right'
+                position='bottom-left'
                 autoClose={3200}
             />
         </>
