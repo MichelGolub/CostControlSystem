@@ -1,57 +1,62 @@
 import { useState } from 'react'
+import { useDeleteRecordMutation } from 'app/services/records'
+import { toast } from 'react-toastify'
 
-import { useDispatch } from 'react-redux'
-import { categoriesActions } from 'store'
-
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { ButtonWithSpinner } from 'components'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import ButtonWithSpinner from 'components/ButtonWithSpinner'
 
-export { ButtonDeleteCategory }
-
-function ButtonDeleteCategory({ categoryId, ...props }) {
+export default function DeleteRecordButton({
+    record,
+    ...props
+}) {
     const [showModal, setShowModal] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    
-    const dispatch = useDispatch()
 
-    const onDelete = async () => {
-        setIsLoading(true)
-        await dispatch(categoriesActions.deleteById(categoryId))
-        setIsLoading(false)
-        setShowModal(false)
+    const [deleteRecord, { isLoading }] = useDeleteRecordMutation()
+
+    async function onDelete() {
+        try {
+            await deleteRecord(record.id)
+                .unwrap()
+            toast.success('Record deleted')
+            setShowModal(false)
+        } catch {
+            console.error('delete record: submitting error')
+        }
     }
 
     return (
         <>
-        <Button 
-            variant='danger'
+        <Button
             onClick={() => setShowModal(true)}
+            variant='danger'
             {...props}
         >
-            <DeleteIcon fontSize='small' />
+            <DeleteIcon />
             &nbsp;
             {'Delete'}
         </Button>
-
-        <Modal
+        
+        <Modal 
             show={showModal} 
             onHide={() => setShowModal(false)} 
             animation={false}
         >
             <Modal.Header closeButton>
-                <Modal.Title>{'Delete category?'}</Modal.Title>
+                <Modal.Title>{'Delete record?'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {'Are you sure you want to delete category?'}
+                {'Are you sure you want to delete record from '}
+                <b>{record.date}</b>
+                {' ?'}
             </Modal.Body>
             <Modal.Footer>
                 <ButtonWithSpinner
                     isLoading={isLoading}
+                    text='Delete'
                     onClick={onDelete}
                     variant='danger'
-                    text='Delete'
                     className='me-auto'
                 />
                 <Button 

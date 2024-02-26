@@ -1,8 +1,6 @@
 import Badge from 'react-bootstrap/Badge'
 
-export { RecordSumDecorator }
-
-function RecordSumDecorator({ sum = 1, ...props }) {
+export default function SumBadge({ sum = 1, ...props }) {
     return (
         <>
         {

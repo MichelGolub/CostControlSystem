@@ -35,7 +35,7 @@ export default function DeleteCategoryButton({
         >
             <DeleteIcon />
             &nbsp;
-            {'Edit'}
+            {'Delete'}
         </Button>
         
         <Modal 

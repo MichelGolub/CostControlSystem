@@ -7,7 +7,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Categories;
 using Microsoft.AspNetCore.Authorization;
-using WebAPI.Models.BudgetAccounts;
 
 namespace WebApi.Controllers
 {

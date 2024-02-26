@@ -46,7 +46,7 @@ export default function CategoryForm({
                     {...register('name')}
                     type='text'
                     placeholder='Enter category name'
-                    isValid={errors.name}
+                    isInvalid={errors.name}
                 />
                 <Form.Control.Feedback type='invalid'>
                     {errors.name?.message}
