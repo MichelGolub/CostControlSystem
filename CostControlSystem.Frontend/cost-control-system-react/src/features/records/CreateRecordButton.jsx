@@ -39,7 +39,7 @@ export default function CreateRecordButton({ ...props }) {
             onHide={() => setShowModal(false)}
             animation={false}
         >
-            <Modal.Header>
+            <Modal.Header closeButton>
                 <Modal.Title>{'Add new record'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>

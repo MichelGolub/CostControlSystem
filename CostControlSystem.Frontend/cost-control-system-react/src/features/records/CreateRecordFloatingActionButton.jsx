@@ -1,17 +1,30 @@
 import { useState } from 'react'
+import { useAddRecordMutation } from 'app/services/records'
+import { toast } from 'react-toastify'
 
-import { RecordForm } from 'features/history' 
-
+import RecordForm from 'features/records/RecordForm' 
 import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import Fab from '@mui/material/Fab'
 import AddIcon from '@mui/icons-material/Add'
-//todo перенести в features/records
-export { FloatingActionButtonAddRecord }
 
-function FloatingActionButtonAddRecord({ ...props }) {
+export default function CreateRecordFloatingActionButton({ ...props }) {
     const [showModal, setShowModal] = useState(false)
+
+    const [addRecord, { error }] = useAddRecordMutation()
+
+    async function onSubmit(values) {
+        console.log(values)
+        try {
+            await addRecord(values)
+                .unwrap()
+            toast.success('Record created')
+            setShowModal(false)
+        } catch {
+            console.error('add record: submitting error')
+        }
+    }
 
     const renderTooltip = (props) => (
         <Tooltip id='fab-tooltip' {...props}>
@@ -47,9 +60,10 @@ function FloatingActionButtonAddRecord({ ...props }) {
                 <Modal.Title>{'Create record'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <RecordForm 
-                    onSubmit={(payload) => dispatch(recordsActions.create(payload))}
-                    onSubmitted={() => setShowModal(false)} 
+                <RecordForm
+                    onSubmit={onSubmit}
+                    error={error}
+                    buttonText='Add record'
                 />
             </Modal.Body>
         </Modal>
