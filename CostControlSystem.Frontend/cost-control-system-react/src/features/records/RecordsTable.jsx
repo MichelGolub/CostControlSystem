@@ -32,7 +32,7 @@ export default function RecordsTable({
                         <td>{index + 1}</td>
                         <td><SumBadge sum={record.sum} /></td>
                         <td>{record.category.name}</td>
-                        <td>{moment(record.date).format(dateFormat).toString()}</td>
+                        <td>{moment(record.date).format(dateFormat)}</td>
                         {
                             !!Controls &&
                             <td className='text-end'>

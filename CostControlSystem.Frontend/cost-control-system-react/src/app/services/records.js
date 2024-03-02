@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { api, providesList } from './api'
 
 const CONTROLLER_NAME = 'records'
@@ -8,6 +9,10 @@ export const recordsApi = api.injectEndpoints({
             query: (budgetAccountId) => ({ 
                 url: CONTROLLER_NAME,
                 params: { budgetAccountId }
+            }),
+            transformResponse: (response) => response.map((record) => {
+                record.date = moment.utc(record.date).local().format()
+                return record
             }),
             providesTags: (result) => providesList(result, 'Records')
         }),
