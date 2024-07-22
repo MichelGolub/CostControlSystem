@@ -348,5 +348,3 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/Finance/.vs/Finance/v17/.suo
-/Finance/WebApi/wwwroot/src/pages/Record/RecordCRUD1.jsx

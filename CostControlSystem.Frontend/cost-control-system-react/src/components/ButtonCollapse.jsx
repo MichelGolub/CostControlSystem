@@ -1,43 +1,32 @@
-import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
-import Collapse from 'react-bootstrap/Collapse'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess'
 
-export default function ButtonCollapse({ 
-    children, 
+export default function ButtonCollapse({
     buttonText = 'Show',
-    isOpenDefault = false,
-    ...props 
+    isOpen,
+    ...props
 }) {
-    const [open, setOpen] = useState(isOpenDefault)
-
     return (
         <>
-        <Button
-            onClick={() => setOpen(!open)}
-            variant='secondary'
-            aria-controls='collapse-content'
-            aria-expanded={open}
-            {...props}
-        >
-        {
-            open ? <>
-                <UnfoldMoreIcon />&nbsp;
-                {buttonText}&nbsp;
-                <UnfoldMoreIcon />
-            </> : <>
-                <UnfoldLessIcon />&nbsp;
-                {buttonText}&nbsp;
-                <UnfoldLessIcon />
-            </>
-        }
-        </Button>
-        <Collapse in={open}>
-            <div id='collapse-content'>
-                {children}
-            </div>
-        </Collapse>
+            <Button
+                variant='secondary'
+                aria-controls='collapse-content'
+                aria-expanded={isOpen}
+                {...props}
+            >
+                {
+                    isOpen ? <>
+                        <UnfoldMoreIcon />&nbsp;
+                        {buttonText}&nbsp;
+                        <UnfoldMoreIcon />
+                    </> : <>
+                        <UnfoldLessIcon />&nbsp;
+                        {buttonText}&nbsp;
+                        <UnfoldLessIcon />
+                    </>
+                }
+            </Button>
         </>
     )
 }

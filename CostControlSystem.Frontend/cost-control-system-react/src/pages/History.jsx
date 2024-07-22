@@ -7,7 +7,7 @@ import EditRecordButton from 'features/records/EditRecordButton'
 import DeleteRecordButton from 'features/records/DeleteRecordButton'
 import RecordsTable from 'features/records/RecordsTable'
 import LoadingWrapper from 'components/LoadingWrapper'
-import FilteringOptions from 'features/records/FilteringOptions'
+import FilteringOptions from 'features/records/FilteringOptions/FilteringOptions'
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
